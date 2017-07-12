@@ -1,0 +1,18 @@
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  width: 400px;
+}
+
+button {
+  margin: 0 5px 5px 0;
+}
+
+.cards {
+  display: inline-block;
+  width: 200px;
+}
+.value {
+  display: inline-block;
+  width: 200px;
+}
