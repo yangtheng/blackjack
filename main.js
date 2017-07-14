@@ -70,6 +70,15 @@ class Player {
   surrender () {
     this.bankroll -= this.betAmount / 2
   }
+
+  result (result) {
+    if (result === 'lose') {
+      this.betAmount = 0
+    } else {
+      this.bankroll += this.betAmount * 2
+      this.betAmount = 0
+    }
+  }
 }
 
 var deck = ''
@@ -89,6 +98,7 @@ var newGameButton = document.querySelector('#newgame')
 newGameButton.addEventListener('click', function () {
   if (player.bet(betAmount.value)) {
     deck = new Deck()
+    drawButton.style.display = ''
     betDisplay.textContent = '$' + player.betAmount
     bankroll.textContent = '$' + player.bankroll
     playerDisplay.textContent = ''
@@ -117,7 +127,16 @@ var drawButton = document.querySelector('#draw')
 drawButton.addEventListener('click', function () {
   deck.deal(player.cards)
   playerDisplay.textContent += player.cards[player.cards.length - 1].type + player.cards[player.cards.length - 1].suit
-  playerValue.textContent = checkValue(player.cards)
+  if (isBust(player.cards)){
+    player.result('lose')
+    playerValue.textContent = checkValue(player.cards) + ' BUST'
+    betDisplay.textContent = '$' + player.betAmount
+    bankroll.textContent = '$' + player.bankroll
+    alert('Too much, you bust!')
+    drawButton.style.display = 'none'
+  } else {
+    playerValue.textContent = checkValue(player.cards)
+  }
 })
 
 var dealerturnButton = document.querySelector('#dealerturn')
@@ -159,14 +178,14 @@ function hasAce (card) {
 
 function isBust (playerCards) {
   var cardValue = checkValue(playerCards)
-  if (cardValue > 21) return 'is bust'
-  else return 'is not bust'
+  if (cardValue > 21) return true
+  else return false
 }
 
 function checkBJ (playerCards) {
   var cardValue = checkValue(playerCards)
-  if (cardValue === 21 && playerCards.length === 2) return 'blackjack'
-  else return 'no blackjack'
+  if (cardValue === 21 && playerCards.length === 2) return true
+  else return false
 }
 
 function dealerTurn () {
